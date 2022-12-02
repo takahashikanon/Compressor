@@ -6,9 +6,9 @@ class Compressor {
     }
 
     async compressor(base64, compression) {
-        this.makeCanvas();
-        let result = await this.drowCanvas(base64, compression);
-        this.removeCanvas();
+        this.#makeCanvas();
+        let result = await this.#drowCanvas(base64, compression);
+        this.#removeCanvas();
 
         return result;
     }
@@ -24,9 +24,9 @@ class Compressor {
             Img.src = base64;
             Img.onload = e => {
 
-                let reSizeImg = this.reSize(Img.naturalWidth, Img.naturalHeight, compression);
+                let reSizeImg = this.#reSize(Img.naturalWidth, Img.naturalHeight, compression);
                 canvas2d.drawImage(Img, 0, 0, reSizeImg.width, reSizeImg.height);
-                let resizebase64 = this.readCanvas();
+                let resizebase64 = this.#readCanvas();
 
                 resolve(resizebase64)
             };
