@@ -2,21 +2,18 @@
 class Compressor {
 
     constructor() {
-        this.rebase64 = null;
         this.canvasDiv = null;
     }
 
     async compressor(base64, compression) {
         this.makeCanvas();
-
         let result = await this.drowCanvas(base64, compression);
-
         this.removeCanvas();
 
         return result;
     }
 
-    async drowCanvas(base64, compression) {
+    async #drowCanvas(base64, compression) {
         return new Promise((resolve, reject) => {
 
             this.canvasDiv = document.getElementById('board');
@@ -28,25 +25,21 @@ class Compressor {
             Img.onload = e => {
 
                 let reSizeImg = this.reSize(Img.naturalWidth, Img.naturalHeight, compression);
-
                 canvas2d.drawImage(Img, 0, 0, reSizeImg.width, reSizeImg.height);
+                let resizebase64 = this.readCanvas();
 
-                this.rebase64 = this.readCanvas();
-
-                resolve(this.rebase64)
+                resolve(resizebase64)
             };
         })
     }
 
-    reSize(width, height, compression = 1) {
-
+    #reSize(width, height, compression = 1) {
         if (compression > 1) {
             return;
         }
 
         let reWidth = width * compression;
         let reHeight = height * compression;
-
         let reData = { width: reWidth, height: reHeight };
 
         // キャンバスのサイズ変更
@@ -56,14 +49,12 @@ class Compressor {
         return reData;
     }
 
-    readCanvas() {
-
+    #readCanvas() {
         let base64 = this.canvasDiv.toDataURL('image/jpeg');
-
         return base64;
     }
 
-    makeCanvas() {
+    #makeCanvas() {
         let body = document.getElementsByTagName('body');
         let canvasDiv = document.createElement('canvas');
         canvasDiv.width = 10;
@@ -72,7 +63,7 @@ class Compressor {
         body[0].appendChild(canvasDiv);
     }
 
-    removeCanvas() {
+    #removeCanvas() {
         this.canvasDiv.remove();
     }
 }
